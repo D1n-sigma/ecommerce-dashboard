@@ -199,7 +199,7 @@ app.layout = html.Div(
 )
 
 # jadi ini:
-server = app.server  # ← wajib untuk Render/gunicorn
+server = app.server
 
 if __name__ == "__main__":
     app.run(debug=False)
