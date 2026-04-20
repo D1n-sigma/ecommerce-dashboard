@@ -1,9 +1,22 @@
+import os, urllib.request
+
+DATA_PATH = "online_retail_II.xlsx"
+
+if not os.path.exists(DATA_PATH):
+    print("Downloading dataset... (ini hanya terjadi sekali di Render)")
+    urllib.request.urlretrieve(
+        "https://archive.ics.uci.edu/ml/machine-learning-databases/00502/online_retail_II.xlsx",
+        DATA_PATH
+    )
+    print("Download selesai.")
 import pandas as pd
 import plotly.express as px
 from dash import Dash, dcc, html
 
 # ── 1. LOAD & CLEAN ──────────────────────────────────────────────
-df = pd.read_csv("data/online_retail_II.csv", encoding="utf-8")
+df1 = pd.read_excel(DATA_PATH, sheet_name="Year 2009-2010")
+df2 = pd.read_excel(DATA_PATH, sheet_name="Year 2010-2011")
+df  = pd.concat([df1, df2], ignore_index=True)
 
 df = df[~df["Invoice"].astype(str).str.startswith("C")]
 df = df[df["Customer ID"].notna()]
@@ -185,5 +198,8 @@ app.layout = html.Div(
     ]
 )
 
+# jadi ini:
+server = app.server  # ← wajib untuk Render/gunicorn
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
